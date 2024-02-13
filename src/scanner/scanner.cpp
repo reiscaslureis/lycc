@@ -38,40 +38,23 @@ std::string Scanner::getIntegerLiteral() {
 }
 
 Token Scanner::nextToken() {
+    char temp = this -> peek;
+
     switch (this -> peek) {
-
-        case '+':
+        case '+': case '-': case '*': case '/': case '^': case '%': case '(': case ')':
             this -> nextChar();
-            return Token(Tag::ADDITION, "+");
 
-        case '-':
-            this -> nextChar();
-            return Token(Tag::SUBTRACTION, "-");
+        switch (temp) {
+            case '+': return Token(Tag::ADDITION, "+");
+            case '-': return Token(Tag::SUBTRACTION, "-");
+            case '*': return Token(Tag::MULTIPLICATION, "*");
+            case '/': return Token(Tag::DIVISION, "/");
+            case '^': return Token(Tag::EXPONENTIATION, "^");
+            case '%': return Token(Tag::MODULO, "%");
+            case '(': return Token(Tag::OPEN_PARENTHESES, "(");
+            case ')': return Token(Tag::CLOSE_PARENTHESES, ")");     
+        }
 
-        case '*':
-            this -> nextChar();
-            return Token(Tag::MULTIPLICATION, "*");
-
-        case '/':
-            this -> nextChar();
-            return Token(Tag::DIVISION, "/");
-
-        case '^':
-            this -> nextChar();
-            return Token(Tag::EXPONENTIATION, "^");
-
-        case '%':
-            this -> nextChar();
-            return Token(Tag::MODULO, "%");
-
-        case '(':
-            this -> nextChar();
-            return Token(Tag::OPEN_PARENTHESES, "(");
-
-        case ')':
-            this -> nextChar();
-            return Token(Tag::CLOSE_PARENTHESES, ")");
-        
         default:
             if (std::isdigit(this -> peek)) {
                 return Token(Tag::INTEGER_LITERAL, this -> getIntegerLiteral());
