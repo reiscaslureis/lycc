@@ -1,15 +1,17 @@
 #pragma once
 
 #include <fstream>
+#include <sstream>
 #include <string>
 #include <map>
+#include <memory>
 
 #include "token.hpp"
 #include "tag.hpp"
 
 class Scanner {
     private:
-        std::ifstream source;
+        std::unique_ptr<std::istream> source;
         char peek;
 
     	bool skipChar(char c);

@@ -1,5 +1,6 @@
 #include <iostream>
 #include <memory>
+#include <string>
 
 #include "scanner/tag.hpp"
 #include "scanner/token.hpp"

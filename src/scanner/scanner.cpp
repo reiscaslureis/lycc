@@ -1,6 +1,11 @@
 #include "scanner/scanner.hpp"
 
-Scanner::Scanner(std::string source) : source(source) {
+Scanner::Scanner(std::string source) {
+    if (source.find(".lyc") != std::string::npos) {
+        this -> source = std::make_unique<std::ifstream>(std::move(source));
+
+    } else { this -> source = std::make_unique<std::istringstream>(std::move(source)); }
+
     this -> nextChar();
 }
 
@@ -15,11 +20,11 @@ bool Scanner::skipChar(char c) {
 }
 
 void Scanner::nextChar() {   
-    do { this -> source.get(this -> peek);
+    do { this -> source -> get(this -> peek);
     } while (this -> skipChar(this -> peek));
 }
 
-bool Scanner::isEOF() { return (this -> source.eof()) ? true : false; }
+bool Scanner::isEOF() { return (this -> source -> eof()) ? true : false; }
 
 std::string Scanner::getIntegerLiteral() {
     std::string integer_literal = "";
