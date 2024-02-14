@@ -21,6 +21,6 @@ class Scanner {
     public:
         Scanner(std::string source);
         
-        Token nextToken();
+        Token nextToken(bool print = false);
         bool isEOF();
 };

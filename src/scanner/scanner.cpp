@@ -1,5 +1,7 @@
 #include "scanner/scanner.hpp"
 
+#include <iostream>
+
 Scanner::Scanner(std::string source) {
     if (source.find(".lyc") != std::string::npos) {
         this -> source = std::make_unique<std::ifstream>(std::move(source));
@@ -37,7 +39,18 @@ std::string Scanner::getIntegerLiteral() {
     return integer_literal;
 }
 
-Token Scanner::nextToken() {
+Token Scanner::nextToken(bool print) {
+    auto traceNextToken = [this]() {
+        Token token = this -> nextToken();
+        
+        std::cout << token.getLexeme() << ' ';
+        std::cout << enumTagToString(token.getTag()) << '\n';
+
+        return token;
+    };
+
+    if (print) { return traceNextToken(); }
+
     char temp = this -> peek;
 
     switch (this -> peek) {
