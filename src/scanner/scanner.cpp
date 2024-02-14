@@ -74,6 +74,6 @@ Token Scanner::nextToken(bool print) {
             }
             
             this -> nextChar();
-            return Token(Tag::UNKNOWN, "UNKNOWN");
+            return Token(Tag::UNKNOWN, std::string(1, temp));
     }
 }
