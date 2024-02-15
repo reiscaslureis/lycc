@@ -54,7 +54,8 @@ Token Scanner::nextToken(bool print) {
     char temp = this -> peek;
 
     switch (this -> peek) {
-        case '+': case '-': case '*': case '/': case '^': case '%': case '(': case ')':
+        case '+': case '-': case '*': case '/': case '^': case '%': case '(':
+        case ')': case '\n':
             this -> nextChar();
 
         switch (temp) {
@@ -66,6 +67,7 @@ Token Scanner::nextToken(bool print) {
             case '%': return Token(Tag::MODULO, "%");
             case '(': return Token(Tag::OPEN_PARENTHESES, "(");
             case ')': return Token(Tag::CLOSE_PARENTHESES, ")");     
+            case '\n': return Token(Tag::NEWLINE, "\\n");    
         }
 
         default:

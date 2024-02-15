@@ -14,6 +14,7 @@ std::string enumTagToString(Tag tag) {
         case Tag::OPEN_PARENTHESES: return "OPEN_PARENTHESES";
         case Tag::CLOSE_PARENTHESES: return "CLOSE_PARENTHESES";
         case Tag::UNKNOWN: return "UNKNOWN";
+        case Tag::NEWLINE: return "NEWLINE";
         
         default: return "unknown tag";
     }
