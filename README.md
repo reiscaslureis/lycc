@@ -1,10 +1,10 @@
 ```
-E  -> R E'
-E' -> + R E' | - R E' | ε
-R  -> L R'
-R' -> < L R' | > L R' | <= L R' | >= L R' | == L R' | != L R' | ε
-L  -> T L' 
-L' -> and T L' | or T L' | ε
+E  -> L E'
+E' -> + L E' | - L E' | ε
+L  -> R L' 
+L' -> and R L' | or R L' | ε
+R  -> T R'
+R' -> < T R' | > T R' | <= T R' | >= T R' | == T R' | != T R' | ε
 T  -> P T'
 T' -> * P T' | / P T' | % P T' | ε
 P  -> F P'
