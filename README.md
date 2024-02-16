@@ -1,13 +1,20 @@
 ```
-EXPRESSION      -> TERM EXPRESSION'
-EXPRESSION'     -> + TERM EXPRESSION' | - TERM EXPRESSION' | ε
-TERM            -> POWER TERM'
-TERM'           -> * POWER TERM' | / POWER TERM' | % POWER TERM' | ε
-POWER           -> FACTOR POWER'
-POWER'          -> ^ FACTOR POWER' | ε
-FACTOR          -> ( EXPRESSION ) | INTEGER_LITERAL
-INTEGER_LITERAL -> DIGIT+
-DIGIT           -> 0 | 1 | ... | 9
+E  -> R E'
+E' -> + R E' | - R E' | ε
+R  -> L R'
+R' -> < L R' | > L R' | <= L R' | >= L R' | == L R' | != L R' | ε
+L  -> T L' 
+L' -> and T L' | or T L' | ε
+T  -> P T'
+T' -> * P T' | / P T' | % P T' | ε
+P  -> F P'
+P' -> ^ F P' | ε
+F  -> ( E ) | IL | BL
+
+IL     -> D+
+BL     -> true | false
+
+D  -> 0 | 1 | ... | 9
 ```
 ---
 ## Build
