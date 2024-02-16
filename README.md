@@ -1,4 +1,8 @@
+## Grammar
 ```
+S  -> A | E
+A  -> ID = E A'
+A' -> , A | ε
 E  -> L E'
 E' -> + L E' | - L E' | ε
 L  -> R L' 
@@ -9,12 +13,14 @@ T  -> P T'
 T' -> * P T' | / P T' | % P T' | ε
 P  -> F P'
 P' -> ^ F P' | ε
-F  -> ( E ) | IL | BL
+F  -> ( E ) | IL | BL | ID
 
-IL     -> D+
-BL     -> true | false
+IL -> D+
+ID -> LT (LT | D)*
+BL -> true | false
 
 D  -> 0 | 1 | ... | 9
+LT -> a | b | ... | z | A | B | ... Z | _
 ```
 ---
 ## Build
@@ -36,7 +42,7 @@ g++ -std=c++17 ../src/*.cpp ../src/scanner/*.cpp -o lycc -I ../include
 ---
 ## Use
 ### Simple Usage
-At this moment, lycc compiler has only lexical analysis, and you can scan from file or one-line expression
+At this moment, lycc has only lexical analysis, and you can scan from file or one-line expression
 ```
 ./lycc '<one-line expression>'
 ```
