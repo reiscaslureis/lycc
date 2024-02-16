@@ -8,6 +8,11 @@ Scanner::Scanner(std::string source) {
 
     } else { this -> source = std::make_unique<std::istringstream>(std::move(source)); }
 
+    this -> keywords["and"] = Tag::AND;
+    this -> keywords["or"] = Tag::OR;
+    this -> keywords["true"] = Tag::TRUE;
+    this -> keywords["false"] = Tag::FALSE;
+
     this -> nextChar();
 }
 
@@ -21,23 +26,15 @@ bool Scanner::skipChar(char c) {
     }
 }
 
-void Scanner::nextChar() {   
-    do { this -> source -> get(this -> peek);
-    } while (this -> skipChar(this -> peek));
+void Scanner::nextChar(bool skipChar) {   
+    if (skipChar == true) {
+        do { this -> source -> get(this -> peek); } 
+        while (this -> skipChar(this -> peek) && !this -> isEOF());
+    
+    } else { this -> source -> get(this -> peek); }
 }
 
 bool Scanner::isEOF() { return (this -> source -> eof()) ? true : false; }
-
-std::string Scanner::getIntegerLiteral() {
-    std::string integer_literal = "";
-
-    while (std::isdigit(this -> peek) && !this -> isEOF()) { 
-        integer_literal += this -> peek; 
-        this -> nextChar();    
-    }
-
-    return integer_literal;
-}
 
 Token Scanner::nextToken(bool print) {
     auto traceNextToken = [this]() {
@@ -55,7 +52,7 @@ Token Scanner::nextToken(bool print) {
 
     switch (this -> peek) {
         case '+': case '-': case '*': case '/': case '^': case '%': case '(':
-        case ')': case '\n':
+        case ')': case '\n': case '<': case '>': case '=': case '!':
             this -> nextChar();
 
         switch (temp) {
@@ -67,14 +64,70 @@ Token Scanner::nextToken(bool print) {
             case '%': return Token(Tag::MODULO, "%");
             case '(': return Token(Tag::OPEN_PARENTHESES, "(");
             case ')': return Token(Tag::CLOSE_PARENTHESES, ")");     
-            case '\n': return Token(Tag::NEWLINE, "\\n");    
+            case '\n': return Token(Tag::ENDLINE, "\\n");
+
+            case '<': 
+                if (this -> peek == '=') { 
+                    this -> nextChar();
+                    return Token(Tag::LESS_THAN_OR_EQUAL, "<="); }
+
+                else { return Token(Tag::LESS_THAN, "<"); }
+            
+            case '>': 
+                if (this -> peek == '=') { 
+                    this -> nextChar();
+                    return Token(Tag::GREATER_THAN_OR_EQUAL , ">="); }
+
+                else { return Token(Tag::GREATER_THAN   , ">"); }
+
+            case '!':
+                if (this -> peek == '=') { 
+                    this -> nextChar();
+                    return Token(Tag::NOT_EQUAL , "!="); }
+
+                else { return Token(Tag::NOT , "!"); }      
+
+            case '=':
+                if (this -> peek == '=' && !this -> isEOF()) { 
+                    std::cout << "outr giau\n";
+                    this -> nextChar();
+                    return Token(Tag::EQUAL , "=="); }
+
+                else { return Token(Tag::ASSIGNMENT , "="); }        
         }
 
         default:
             if (std::isdigit(this -> peek)) {
-                return Token(Tag::INTEGER_LITERAL, this -> getIntegerLiteral());
+                std::string digitTemp = "";
+
+                do {
+                    digitTemp += this -> peek;
+                    this -> nextChar(false);    
+
+                } while (std::isdigit(this -> peek) && !this -> isEOF() && this -> peek != ' ');
+
+                if (this -> peek == ' ') { this -> nextChar(); }
+                
+                return Token(Tag::INTEGER_LITERAL, digitTemp);
+
+            } else if (std::isalpha(this -> peek) or this -> peek == '_') {
+                std::string alphaTemp = "";
+
+                do {
+                    alphaTemp += this -> peek; 
+                    this -> nextChar(false);
+
+                } while ((std::isalnum(this -> peek) or this -> peek == '_') 
+                                                     && !this -> isEOF() && this -> peek != ' ');
+
+                if (this -> peek == ' ') { this -> nextChar(); }
+                
+                auto it = this -> keywords.find(alphaTemp);
+                if (it != this -> keywords.end()) { return Token(it -> second, alphaTemp); };
+
+                return Token(Tag::UNKNOWN, alphaTemp);
             }
-            
+               
             this -> nextChar();
             return Token(Tag::UNKNOWN, std::string(1, temp));
     }
