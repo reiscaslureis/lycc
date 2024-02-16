@@ -110,14 +110,14 @@ Token Scanner::nextToken(bool print) {
                 
                 return Token(Tag::INTEGER_LITERAL, digitTemp);
 
-            } else if (std::isalpha(this -> peek) or this -> peek == '_') {
+            } else if (std::isalpha(this -> peek) || this -> peek == '_') {
                 std::string alphaTemp = "";
 
                 do {
                     alphaTemp += this -> peek; 
                     this -> nextChar(false);
 
-                } while ((std::isalnum(this -> peek) or this -> peek == '_') 
+                } while ((std::isalnum(this -> peek) || this -> peek == '_') 
                                                      && !this -> isEOF() && this -> peek != ' ');
 
                 if (this -> peek == ' ') { this -> nextChar(); }
