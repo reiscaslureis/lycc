@@ -52,7 +52,7 @@ Token Scanner::nextToken(bool print) {
 
     switch (this -> peek) {
         case '+': case '-': case '*': case '/': case '^': case '%': case '(':
-        case ')': case '\n': case '<': case '>': case '=': case '!':
+        case ')': case '\n': case '<': case '>': case '=': case '!': case ',':
             this -> nextChar();
 
         switch (temp) {
@@ -64,7 +64,8 @@ Token Scanner::nextToken(bool print) {
             case '%': return Token(Tag::MODULO, "%");
             case '(': return Token(Tag::OPEN_PARENTHESES, "(");
             case ')': return Token(Tag::CLOSE_PARENTHESES, ")");     
-            case '\n': return Token(Tag::ENDLINE, "\\n");
+            case '\n': return Token(Tag::NEWLINE, "\\n");
+            case ',': return Token(Tag::COMMA, ",");
 
             case '<': 
                 if (this -> peek == '=') { 
@@ -89,7 +90,6 @@ Token Scanner::nextToken(bool print) {
 
             case '=':
                 if (this -> peek == '=' && !this -> isEOF()) { 
-                    std::cout << "outr giau\n";
                     this -> nextChar();
                     return Token(Tag::EQUAL , "=="); }
 
@@ -125,7 +125,7 @@ Token Scanner::nextToken(bool print) {
                 auto it = this -> keywords.find(alphaTemp);
                 if (it != this -> keywords.end()) { return Token(it -> second, alphaTemp); };
 
-                return Token(Tag::UNKNOWN, alphaTemp);
+                return Token(Tag::IDENTIFIER, alphaTemp);
             }
                
             this -> nextChar();

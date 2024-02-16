@@ -12,7 +12,7 @@ std::string enumTagToString(Tag tag) {
         case Tag::OPEN_PARENTHESES: return "OPEN_PARENTHESES";
         case Tag::CLOSE_PARENTHESES: return "CLOSE_PARENTHESES";
         case Tag::UNKNOWN: return "UNKNOWN";
-        case Tag::ENDLINE: return "ENDLINE";
+        case Tag::NEWLINE: return "NEWLINE";
         case Tag::GREATER_THAN: return "GREATER_THAN";
         case Tag::LESS_THAN: return "LESS_THAN";
         case Tag::GREATER_THAN_OR_EQUAL: return "GREATER_THAN_OR_EQUAL";
@@ -26,6 +26,8 @@ std::string enumTagToString(Tag tag) {
         case Tag::FALSE: return "FALSE";
         case Tag::NOT: return "NOT";
         case Tag::ASSIGNMENT: return "ASSIGNMENT";
+        case Tag::COMMA: return "COMMA";
+        case Tag::IDENTIFIER: return "IDENTIFIER";
         
         default: return "unknown tag";
     }
