@@ -11,10 +11,12 @@ int main(int argc, char *argv[]) {
         if (arg == "--scanner" || arg == "-s") { traceScanner = true; }
     }
     
-    std::unique_ptr<Scanner> scanner = std::make_unique<Scanner>(argv[1]);
+    std::shared_ptr<Scanner> scanner = std::make_shared<Scanner>(argv[1]);
+    std::shared_ptr<Token> token;
 
-    while (!scanner -> isEOF())  {
-        Token token = scanner -> nextToken(traceScanner);
+    while (!scanner -> isEOF()) {
+        token = scanner -> nextToken();
+        std::cout << token -> getLexeme() << ' ' << token -> getType() << '\n';
     }
 
     return EXIT_SUCCESS;

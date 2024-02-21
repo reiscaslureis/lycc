@@ -2,16 +2,14 @@
 
 #include <string>
 
-#include "tag.hpp"
-
 class Token {
     private:
         std::string lexeme;
-        Tag tag;
+        std::string type;
         
     public:
-        Token(Tag tag, std::string lexeme);
+        Token(std::string lexeme, std::string type);
 
-        Tag getTag();
         std::string getLexeme();
+        std::string getType();
 };

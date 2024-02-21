@@ -1,134 +1,45 @@
 #include "scanner/scanner.hpp"
 
-#include <iostream>
-
 Scanner::Scanner(std::string source) {
     if (source.find(".lyc") != std::string::npos) {
-        this -> source = std::make_unique<std::ifstream>(std::move(source));
-
-    } else { this -> source = std::make_unique<std::istringstream>(std::move(source)); }
-
-    this -> keywords["and"] = Tag::AND;
-    this -> keywords["or"] = Tag::OR;
-    this -> keywords["true"] = Tag::TRUE;
-    this -> keywords["false"] = Tag::FALSE;
-
-    this -> nextChar();
-}
-
-bool Scanner::skipChar(char c) {
-    switch (c) {
-        case ' ': case '\t': case '\r':
-            return true;
-            break;
-        
-        default: return false;
-    }
-}
-
-void Scanner::nextChar(bool skipChar) {   
-    if (skipChar == true) {
-        do { this -> source -> get(this -> peek); } 
-        while (this -> skipChar(this -> peek) && !this -> isEOF());
+        this -> source = std::make_shared<std::ifstream>(std::move(source)); } 
     
-    } else { this -> source -> get(this -> peek); }
+    else { this -> source = std::make_shared<std::istringstream>(std::move(source)); }
 }
 
-bool Scanner::isEOF() { return (this -> source -> eof()) ? true : false; }
+void Scanner::updateIndentValue() {
+    int temp = 0, aux = this -> indentLevel;
+    while (this -> source -> peek() == '\t') {
+        ++temp;
+        this -> source -> get();
+    } 
 
-Token Scanner::nextToken(bool print) {
-    auto traceNextToken = [this]() {
-        Token token = this -> nextToken();
+    this -> indentLevel += temp - this -> indentLevel;
+    this -> nextIndent = this -> indentLevel - aux;
+    this -> checkIndent = false;
+}
+
+std::shared_ptr<Token> Scanner::getNewline() {
+    while (this -> source -> peek() == '\n') { this -> source -> get(); }
+    this -> checkIndent = true;
         
-        std::cout << token.getLexeme() << ' ';
-        std::cout << enumTagToString(token.getTag()) << '\n';
+    return std::make_shared<Token>("newline", "NEWLINE");
+}
 
-        return token;
-    };
+bool Scanner::isEOF() { return this -> source -> peek() == EOF; }
 
-    if (print) { return traceNextToken(); }
+std::shared_ptr<Token> Scanner::nextToken() {
+    if (this -> source -> peek() == '\n') { return this -> getNewline(); }
+    if (this -> checkIndent == true) { this -> updateIndentValue(); }
 
-    char temp = this -> peek;
+    if (this -> nextIndent > 0) {
+        --(this -> nextIndent);
+        return std::make_shared<Token>("indent", "INDENT");
 
-    switch (this -> peek) {
-        case '+': case '-': case '*': case '/': case '^': case '%': case '(':
-        case ')': case '\n': case '<': case '>': case '=': case '!': case ',':
-            this -> nextChar();
-
-        switch (temp) {
-            case '+': return Token(Tag::ADDITION, "+");
-            case '-': return Token(Tag::SUBTRACTION, "-");
-            case '*': return Token(Tag::MULTIPLICATION, "*");
-            case '/': return Token(Tag::DIVISION, "/");
-            case '^': return Token(Tag::EXPONENTIATION, "^");
-            case '%': return Token(Tag::MODULO, "%");
-            case '(': return Token(Tag::OPEN_PARENTHESES, "(");
-            case ')': return Token(Tag::CLOSE_PARENTHESES, ")");     
-            case '\n': return Token(Tag::NEWLINE, "\\n");
-            case ',': return Token(Tag::COMMA, ",");
-
-            case '<': 
-                if (this -> peek == '=') { 
-                    this -> nextChar();
-                    return Token(Tag::LESS_THAN_OR_EQUAL, "<="); }
-
-                else { return Token(Tag::LESS_THAN, "<"); }
-            
-            case '>': 
-                if (this -> peek == '=') { 
-                    this -> nextChar();
-                    return Token(Tag::GREATER_THAN_OR_EQUAL , ">="); }
-
-                else { return Token(Tag::GREATER_THAN   , ">"); }
-
-            case '!':
-                if (this -> peek == '=') { 
-                    this -> nextChar();
-                    return Token(Tag::NOT_EQUAL , "!="); }
-
-                else { return Token(Tag::NOT , "!"); }      
-
-            case '=':
-                if (this -> peek == '=' && !this -> isEOF()) { 
-                    this -> nextChar();
-                    return Token(Tag::EQUAL , "=="); }
-
-                else { return Token(Tag::ASSIGNMENT , "="); }        
-        }
-
-        default:
-            if (std::isdigit(this -> peek)) {
-                std::string digitTemp = "";
-
-                do {
-                    digitTemp += this -> peek;
-                    this -> nextChar(false);    
-
-                } while (std::isdigit(this -> peek) && !this -> isEOF() && this -> peek != ' ');
-
-                if (this -> peek == ' ') { this -> nextChar(); }
-                
-                return Token(Tag::INTEGER_LITERAL, digitTemp);
-
-            } else if (std::isalpha(this -> peek) || this -> peek == '_') {
-                std::string alphaTemp = "";
-
-                do {
-                    alphaTemp += this -> peek; 
-                    this -> nextChar(false);
-
-                } while ((std::isalnum(this -> peek) || this -> peek == '_') 
-                                                     && !this -> isEOF() && this -> peek != ' ');
-
-                if (this -> peek == ' ') { this -> nextChar(); }
-                
-                auto it = this -> keywords.find(alphaTemp);
-                if (it != this -> keywords.end()) { return Token(it -> second, alphaTemp); };
-
-                return Token(Tag::IDENTIFIER, alphaTemp);
-            }
-               
-            this -> nextChar();
-            return Token(Tag::UNKNOWN, std::string(1, temp));
+    } else if (this -> nextIndent < 0) {
+        ++(this -> nextIndent);
+        return std::make_shared<Token>("dedent", "DEDENT");
     }
+
+    return std::make_shared<Token>(std::string(1, this -> source -> get()), "UNKNOWN");
 }

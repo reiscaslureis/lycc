@@ -6,22 +6,32 @@
 #include <map>
 #include <memory>
 #include <vector>
+#include <regex>
+#include <iostream>
 
 #include "token.hpp"
-#include "tag.hpp"
 
 class Scanner {
     private:
-        std::unique_ptr<std::istream> source;
-        std::map <std::string, Tag> keywords;
-        char peek;
+        std::shared_ptr<std::istream> source;
+        
+        //std::regex keywords;
 
-    	bool skipChar(char c);
-        void nextChar(bool skipChar = true);
+        int indentLevel = 0, nextIndent;
+        int checkIndent = false;
+
+        std::shared_ptr<Token> getNewline();
+
+        void updateIndentValue();
+
+        //std::regex regexIL;
+        //std::regex regexID;
+
+        //void nextChar();
 
     public:
         Scanner(std::string source);
-        
-        Token nextToken(bool print = false);
+
+        std::shared_ptr<Token> nextToken();
         bool isEOF();
 };

@@ -1,7 +1,6 @@
 #include "scanner/token.hpp"
 
-Token::Token(Tag tag, std::string lexeme) : tag(tag), lexeme(lexeme) {  }
-
-Tag Token::getTag() { return this -> tag; }
+Token::Token(std::string lexeme, std::string type) : lexeme(lexeme), type(type) {}
 
 std::string Token::getLexeme() { return this -> lexeme; }
+std::string Token::getType() { return this -> type; }
