@@ -14,10 +14,7 @@ int main(int argc, char *argv[]) {
     std::shared_ptr<Scanner> scanner = std::make_shared<Scanner>(argv[1]);
     std::shared_ptr<Token> token;
 
-    while (!scanner -> isEOF()) {
-        token = scanner -> nextToken();
-        std::cout << token -> getLexeme() << ' ' << token -> getType() << '\n';
-    }
+    while (!scanner -> isEOF()) { token = scanner -> nextToken(traceScanner); }
 
     return EXIT_SUCCESS;
 }

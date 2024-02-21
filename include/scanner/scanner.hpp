@@ -6,7 +6,6 @@
 #include <map>
 #include <memory>
 #include <vector>
-#include <regex>
 #include <iostream>
 
 #include "token.hpp"
@@ -14,24 +13,18 @@
 class Scanner {
     private:
         std::shared_ptr<std::istream> source;
-        
-        //std::regex keywords;
+        std::shared_ptr<std::map<std::string, std::string>> tokens;
 
-        int indentLevel = 0, nextIndent;
-        int checkIndent = false;
+        bool isSymbol(char symbol);
+        bool isAlphaNumeric(char c);
 
-        std::shared_ptr<Token> getNewline();
-
-        void updateIndentValue();
-
-        //std::regex regexIL;
-        //std::regex regexID;
-
-        //void nextChar();
+        std::string getAlphaNumeric();
+        std::string getIntegerLiteral();
+        std::string getSymbol();
 
     public:
         Scanner(std::string source);
 
-        std::shared_ptr<Token> nextToken();
+        std::shared_ptr<Token> nextToken(bool traceScanner = false);
         bool isEOF();
 };
