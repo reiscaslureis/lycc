@@ -6,9 +6,9 @@ Scanner::Scanner(std::string source) {
     
     else { this -> source = std::make_shared<std::istringstream>(std::move(source)); }
 
-    this -> tokens = std::make_shared<std::map<std::string, std::string>>();
+    this -> tags = std::make_shared<std::map<std::string, std::string>>();
 
-    this -> tokens -> insert({
+    this -> tags -> insert({
         {"=", "ASSIGNMENT"},
         {"==", "EQUAL"},
         {"!=", "NOT_EQUAL"},
@@ -26,10 +26,10 @@ Scanner::Scanner(std::string source) {
         {"--", "DECREMENT"},
         {"/", "DIVISION"},
         {"%", "MODULO"},
-        {"^", "EXPONENTATION"},
+        {"^", "EXPONENTIATION"},
         {"*", "MULTIPLICATION"},
         {";", "SEMICOLON"},
-        {",", "COLON"},
+        {",", "COMMA"},
         {"and", "AND"},
         {"or", "OR"},
         {"true", "TRUE"},
@@ -42,7 +42,7 @@ Scanner::Scanner(std::string source) {
 }
 
 bool Scanner::isSymbol(char c) {
-    std::string symbols = "=!><{}[]-+%^*;";
+    std::string symbols = "=!><{}[]-+%^*;,";
     return symbols.find_first_of(c) != std::string::npos;
 }
 
@@ -100,8 +100,8 @@ std::shared_ptr<Token> Scanner::nextToken(bool traceScanner) {
     if (isAlphaNumeric(this -> source -> peek())) {
         std::string alphaNumeric = this -> getAlphaNumeric();
 
-        auto it = this -> tokens -> find(alphaNumeric);
-        if (it != this -> tokens -> end()) { return std::make_shared<Token>(alphaNumeric, it -> second); }
+        auto it = this -> tags -> find(alphaNumeric);
+        if (it != this -> tags -> end()) { return std::make_shared<Token>(alphaNumeric, it -> second); }
 
         return std::make_shared<Token>(alphaNumeric, "IDENTIFIER");
     }
@@ -113,8 +113,8 @@ std::shared_ptr<Token> Scanner::nextToken(bool traceScanner) {
     if (isSymbol(this -> source -> peek())) {
         std::string symbol = this -> getSymbol();
         
-        auto it = this -> tokens -> find(symbol);
-        if (it != this -> tokens -> end()) { return std::make_shared<Token>(symbol, it -> second); }
+        auto it = this -> tags -> find(symbol);
+        if (it != this -> tags -> end()) { return std::make_shared<Token>(symbol, it -> second); }
 
         return std::make_shared<Token>(symbol, "UNKNOWN");
     }

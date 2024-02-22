@@ -13,7 +13,7 @@
 class Scanner {
     private:
         std::shared_ptr<std::istream> source;
-        std::shared_ptr<std::map<std::string, std::string>> tokens;
+        std::shared_ptr<std::map<std::string, std::string>> tags;
 
         bool isSymbol(char symbol);
         bool isAlphaNumeric(char c);
