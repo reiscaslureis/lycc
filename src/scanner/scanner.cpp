@@ -20,7 +20,7 @@ Scanner::Scanner(std::string source) {
         {"true", "TRUE"}, {"false", "FALSE"},
         {"while", "WHILE"}, 
         {"if", "IF"}, {"else if", "ELIF"}, {"else", "ELSE"},
-        {"spsh", "SPSH"}, {"spop", "SPOP"},
+        {"push", "PUSH"}, {"pop", "POP"},
     });
 }
 
