@@ -7,6 +7,7 @@
 #include <memory>
 #include <vector>
 #include <iostream>
+#include <iomanip>
 
 #include "token.hpp"
 
@@ -15,11 +16,13 @@ class Scanner {
         std::shared_ptr<std::istream> source;
         std::shared_ptr<std::map<std::string, std::string>> tags;
 
-        bool isSymbol(char symbol);
-        bool isAlphaNumeric(char c);
+        bool inString = false;
 
-        std::string getAlphaNumeric();
+        bool isSymbol(char symbol);
+
+        std::string getIdentifier();
         std::string getIntegerLiteral();
+        std::string getStringLiteral();
         std::string getSymbol();
 
     public:
