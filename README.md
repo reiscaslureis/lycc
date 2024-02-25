@@ -15,6 +15,7 @@
 <TermP>  ::= ("*" | "/" | "%") <Poten> <TermP> | ε
 <Poten>  ::= <Factor> <PotenP>
 <PotenP> ::= "^" <Factor> <PotenP> | ε
+<Unary>  ::= ( "++" | "--" ) <Id> | <Factor>
 <Factor> ::= "(" <Expr> ")" | <Id> | <IntLit> | <BooLit> | <StrLit>
 <Id>     ::= <Letter> { <Letter> | <Digit> }
 <IntLit> ::= <Digit> { <Digit> }
