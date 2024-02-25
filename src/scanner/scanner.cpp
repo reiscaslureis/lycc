@@ -11,16 +11,12 @@ Scanner::Scanner(std::string source) {
     this -> tags -> insert({
         {"=", "ASSIGN"}, {"'", "SQUOTE"},
         {"==", "EQUAL"}, {"!=", "NEQUAL"}, {">", "GTHAN"}, {"<", "LTHAN"}, {">=", "GTEQUAL"}, {"<=", "LTEQUAL"},
-        {"{", "OBRACE"}, {"}", "CBRACE"}, {"(", "OPAREN"}, {")", "CPAREN"},
+        {"(", "OPAREN"}, {")", "CPAREN"},
         {"/", "DIV"}, {"%", "MOD"}, {"^", "EXPO"}, {"*", "MUL"}, {"-", "SUB"}, {"+", "ADD"},
         {"++", "INC"}, {"--", "DEC"},
-        {"$", "DOLLAR"}, {"[", "OBRCKT"}, {"]", "CBRCKT"},
         {";", "SEMI"}, {"output", "OUTPUT"},
         {"and", "AND"}, {"or", "OR"},
         {"true", "TRUE"}, {"false", "FALSE"},
-        {"while", "WHILE"}, 
-        {"if", "IF"}, {"else if", "ELIF"}, {"else", "ELSE"},
-        {"push", "PUSH"}, {"pop", "POP"},
     });
 }
 
