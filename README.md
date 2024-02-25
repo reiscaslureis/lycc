@@ -1,13 +1,10 @@
 ## Grammar
 ```EBNF
-<Block>  ::= "{" Stmts "}" | Stmts
-<Stmts>  ::= Stmt ";" Stmts | ε
-<Stmt>   ::= Assign | If | While
-<If>     ::= "if" Expr Block Elif Else
-<Elif>   ::= "else if" Expr Block Elif Else | ε
-<Else>   ::= "else" Block | ε
-<While>  ::= "while" Expr Block
-<Assign> ::= Id "=" <Expr>
+<Stmts>  ::= <Stmt> ";" <Stmts> | ε
+<Stmt>   ::= <Assign> | <Expr> | <Output>
+<Output> ::= "output" ( <StrLit> | <Expr> ) <OutputP>
+<OutputP> ::= ( <StrLit> | <Expr> ) <OutputP> | ε
+<Assign> ::= <Id> "=" <Expr>
 <Expr>   ::= <Logic> <ExprP>
 <ExprP>  ::= ("+" | "-") <Logic> <ExprP> | ε
 <Logic>  ::= <Rel> <LogicP>
@@ -18,12 +15,14 @@
 <TermP>  ::= ("*" | "/" | "%") <Poten> <TermP> | ε
 <Poten>  ::= <Factor> <PotenP>
 <PotenP> ::= "^" <Factor> <PotenP> | ε
-<Factor> ::= "(" Expr ")" | Id | IntLit | BooLit
-<Id>     ::= Letter { Letter | Digit }
-<IntLit> ::= Digit { Digit }
+<Factor> ::= "(" <Expr> ")" | <Id> | <IntLit> | <BooLit> | <StrLit>
+<Id>     ::= <Letter> { <Letter> | <Digit> }
+<IntLit> ::= <Digit> { <Digit> }
 <BooLit> ::= "true" | "false"
+<StrLit> ::= "'" <Ascii> { <Ascii> } "'"
 <Digit>  ::= "0" | "1" | ... | "9"
 <Letter> ::= "a" | "b" | ... | "z" | "A" | "B" | ... | "Z" | "_"
+<Ascii>  ::= " " | "!" | """ | "#" | "$" | ... | "ÿ" |
 ```
 ---
 ## Build
@@ -47,7 +46,7 @@ g++ -std=c++17 ../src/*.cpp ../src/scanner/*.cpp -o lycc -I ../include
 ### Simple Usage
 At this moment, lycc has only lexical analysis, and you can scan from file or one-line Expression
 ```
-./lycc '<one-line Expression>'
+./lycc "<one-line Expression>"
 ```
 ```
 ./lycc <file>.lyc
