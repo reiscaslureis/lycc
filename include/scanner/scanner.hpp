@@ -14,7 +14,7 @@
 class Scanner {
     private:
         std::shared_ptr<std::istream> source;
-        std::shared_ptr<std::map<std::string, std::string>> tags;
+        std::map<std::string, std::string> tags;
 
         bool inString = false;
 
